@@ -1,6 +1,9 @@
 package handlers
 
-import "github.com/Asprilla24/vermouth/models"
+import (
+	"github.com/Asprilla24/vermouth/models"
+	"github.com/labstack/echo"
+)
 
 //UserStore defines database operation for user
 type UserStore interface {
@@ -19,6 +22,20 @@ func NewUserHandler(store UserStore) *UserHandler {
 	}
 }
 
-func (handler *UserHandler) Router() {
+//Router create and return router for UserHandler
+func (handler *UserHandler) Router(g *echo.Group) {
+	g.POST("", handler.CreateUser)
+}
 
+func (handler *UserHandler) CreateUser(e echo.Context) error {
+	u := models.UserModel{}
+	if err := e.Bind(&u); err != nil {
+		return ShowErrorResponse(e, err)
+	}
+
+	if err := handler.store.CreateUser(&u); err != nil {
+		return ShowErrorResponse(e, err)
+	}
+
+	return ShowSuccessResponse(e, "")
 }
