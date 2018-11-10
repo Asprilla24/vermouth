@@ -11,7 +11,7 @@ import (
 //UserModel for init gorm table and modeling
 type UserModel struct {
 	ID             int64     `gorm:"primary_key" json:"id"`
-	Username       string    `gorm:"username" json:"username"`
+	Username       string    `gorm:"unique_index" json:"username"`
 	Password       string    `gorm:"-" json:"password"`
 	HashedPassword string    `gorm:"size:100" json:"-"`
 	CreatedAt      time.Time `gorm:"created_at" json:"created_at"`
@@ -28,4 +28,8 @@ func (user *UserModel) BeforeCreate(scope *gorm.Scope) error {
 	scope.SetColumn("CreatedAt", time.Now())
 	user.EncryptPassword()
 	return nil
+}
+
+func (user *UserModel) TableName() string {
+	return "users"
 }

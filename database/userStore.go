@@ -21,3 +21,13 @@ func (s *UserStore) CreateUser(user *models.UserModel) error {
 	err := s.db.Create(&user).Error
 	return err
 }
+
+func (s *UserStore) GetUser(username string) (*models.UserModel, error) {
+	result := models.UserModel{}
+	err := s.db.Where("username = ?", username).First(&result).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}

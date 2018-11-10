@@ -17,7 +17,7 @@ func ShowErrorResponse(e echo.Context, err error) error {
 		Message: err.Error(),
 		Status:  http.StatusInternalServerError,
 	}
-	return ShowResponse(e, response)
+	return ShowResponse(e, response.Status, response)
 }
 
 func ShowSuccessResponse(e echo.Context, r interface{}) error {
@@ -26,9 +26,9 @@ func ShowSuccessResponse(e echo.Context, r interface{}) error {
 		Result:  r,
 		Status:  http.StatusOK,
 	}
-	return ShowResponse(e, response)
+	return ShowResponse(e, response.Status, response)
 }
 
-func ShowResponse(e echo.Context, r DefaultResponse) error {
-	return e.JSON(r.Status, r)
+func ShowResponse(e echo.Context, status int, r interface{}) error {
+	return e.JSON(status, r)
 }
