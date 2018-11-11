@@ -23,6 +23,7 @@ func (user *UserModel) EncryptPassword() {
 	user.HashedPassword = string(bcryptPassword[:])
 }
 
+//BeforeCreate what to do before creating data to databases
 func (user *UserModel) BeforeCreate(scope *gorm.Scope) error {
 	scope.SetColumn("ID", uuid.Must(uuid.NewV4()))
 	scope.SetColumn("CreatedAt", time.Now())
@@ -30,6 +31,7 @@ func (user *UserModel) BeforeCreate(scope *gorm.Scope) error {
 	return nil
 }
 
+//TableName return the name of table wants to create in database
 func (user *UserModel) TableName() string {
 	return "users"
 }

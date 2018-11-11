@@ -13,6 +13,7 @@ import (
 type API struct {
 	echo        *echo.Echo
 	userHandler *handlers.UserHandler
+	mainHandler *handlers.MainHandler
 }
 
 func New() *API {
@@ -29,8 +30,11 @@ func (api *API) InitializeHandler() *API {
 	db := database.InitializeDB(&models.UserModel{})
 
 	userStore := database.NewUserStore(db)
+
+	mainHandler := handlers.NewMainHandler(userStore)
 	userHandler := handlers.NewUserHandler(userStore)
 
+	api.mainHandler = mainHandler
 	api.userHandler = userHandler
 
 	return api
@@ -39,9 +43,8 @@ func (api *API) InitializeHandler() *API {
 func (api *API) InitializeRouter() *API {
 	api.echo.Use(middleware.Logger())
 
-	api.echo.POST("/login", api.userHandler.Login)
-	api.echo.POST("/register", api.userHandler.CreateUser)
-
+	mainGroup := api.echo.Group("")
+	api.mainHandler.Router(mainGroup)
 	userGroup := api.echo.Group("/user")
 	api.userHandler.Router(userGroup)
 
