@@ -31,3 +31,13 @@ func (s *UserStore) GetUser(username string) (*models.UserModel, error) {
 
 	return &result, nil
 }
+
+func (s *UserStore) GetUsers() (*[]models.UserModel, error) {
+	result := []models.UserModel{}
+	err := s.db.Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}

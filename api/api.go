@@ -39,6 +39,9 @@ func (api *API) InitializeHandler() *API {
 func (api *API) InitializeRouter() *API {
 	api.echo.Use(middleware.Logger())
 
+	api.echo.POST("/login", api.userHandler.Login)
+	api.echo.POST("/register", api.userHandler.CreateUser)
+
 	userGroup := api.echo.Group("/user")
 	api.userHandler.Router(userGroup)
 

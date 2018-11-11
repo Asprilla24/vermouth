@@ -12,7 +12,7 @@ import (
 type UserModel struct {
 	ID             int64     `gorm:"primary_key" json:"id"`
 	Username       string    `gorm:"unique_index" json:"username"`
-	Password       string    `gorm:"-" json:"password"`
+	Password       string    `gorm:"-" json:"password,omitemty"`
 	HashedPassword string    `gorm:"size:100" json:"-"`
 	CreatedAt      time.Time `gorm:"created_at" json:"created_at"`
 }

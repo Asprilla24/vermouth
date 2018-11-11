@@ -2,7 +2,8 @@ package config
 
 //Config struct
 type Config struct {
-	DB *DBConfig
+	DB        *DBConfig
+	TokenCode string
 }
 
 //DBConfig for database configuration
@@ -30,6 +31,7 @@ var dbConfig = DBConfig{
 //GetConfig : get configuration
 func GetConfig() *Config {
 	return &Config{
-		DB: &dbConfig,
+		DB:        &dbConfig,
+		TokenCode: "vermouthSecret",
 	}
 }
