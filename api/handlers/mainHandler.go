@@ -38,7 +38,7 @@ func (handler *MainHandler) Login(e echo.Context) error {
 		return ShowErrorResponse(e, err)
 	}
 
-	token, err := auth.CreateJWTToken(user.Username)
+	token, err := auth.CreateJWTToken(user.Username, false)
 	if err != nil {
 		return ShowErrorResponse(e, err)
 	}

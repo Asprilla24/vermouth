@@ -1,8 +1,15 @@
 package config
 
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/spf13/viper"
+)
+
 //Config struct
 type Config struct {
-	DB        *DBConfig
+	Database  *DBConfig
 	TokenCode string
 }
 
@@ -18,20 +25,51 @@ type DBConfig struct {
 
 //DefaultCharset : utf8
 const DefaultCharset = "utf8"
+const DefaultDialect = "mysql"
+const DefaultTokenCode = "mySecretCode"
 
-var dbConfig = DBConfig{
-	Dialect:  "mysql",
-	Username: "root",
-	Password: "password",
-	Host:     "127.0.0.1",
-	Name:     "go_example",
-	Charset:  DefaultCharset,
+var configuration = &Config{}
+
+func InitializeConfig() {
+	viper := viper.New()
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	config := &Config{}
+
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err.Error())
+	}
+
+	if err := viper.Unmarshal(config); err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Println(config)
+
+	configuration = config.SetDefaultValueIfEmpty()
 }
 
 //GetConfig : get configuration
 func GetConfig() *Config {
-	return &Config{
-		DB:        &dbConfig,
-		TokenCode: "vermouthSecret",
+	return configuration
+}
+
+func (config *Config) SetDefaultValueIfEmpty() *Config {
+	if IsZeroOfUnderlyingType(config.TokenCode) {
+		config.TokenCode = DefaultTokenCode
 	}
+
+	if IsZeroOfUnderlyingType(config.Database.Charset) {
+		config.Database.Charset = DefaultCharset
+	}
+
+	if IsZeroOfUnderlyingType(config.Database.Dialect) {
+		config.Database.Dialect = DefaultDialect
+	}
+
+	return config
+}
+
+func IsZeroOfUnderlyingType(x interface{}) bool {
+	return reflect.DeepEqual(x, reflect.Zero(reflect.TypeOf(x)).Interface())
 }

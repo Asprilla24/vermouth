@@ -15,13 +15,13 @@ func ConnectDB() (*gorm.DB, error) {
 	config := config.GetConfig()
 
 	dbURI := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=True",
-		config.DB.Username,
-		config.DB.Password,
-		config.DB.Host,
-		config.DB.Name,
-		config.DB.Charset)
+		config.Database.Username,
+		config.Database.Password,
+		config.Database.Host,
+		config.Database.Name,
+		config.Database.Charset)
 
-	db, err := gorm.Open(config.DB.Dialect, dbURI)
+	db, err := gorm.Open(config.Database.Dialect, dbURI)
 	if err != nil {
 		return nil, err
 	}

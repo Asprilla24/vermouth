@@ -1,11 +1,9 @@
 package handlers
 
 import (
-	"github.com/Asprilla24/vermouth/config"
-
+	"github.com/Asprilla24/vermouth/auth"
 	"github.com/Asprilla24/vermouth/models"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 )
 
 //UserStore defines database operation for user
@@ -29,7 +27,7 @@ func NewUserHandler(store UserStore) *UserHandler {
 
 //Router create and return router for UserHandler
 func (handler *UserHandler) Router(g *echo.Group) {
-	g.Use(middleware.JWT([]byte(config.GetConfig().TokenCode)))
+	g.Use(auth.AuthenticateJWT())
 	g.GET("/GetAll", handler.GetUsers)
 }
 

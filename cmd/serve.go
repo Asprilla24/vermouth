@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"github.com/Asprilla24/vermouth/api"
+	"github.com/Asprilla24/vermouth/config"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +28,7 @@ var serveCmd = &cobra.Command{
 	Short: "start http server with configured api",
 	Long:  `Starts a http server and serves the configured api`,
 	Run: func(cmd *cobra.Command, args []string) {
+		config.InitializeConfig()
 		api := api.New()
 
 		port := cmd.Flag("port").Value.String()
